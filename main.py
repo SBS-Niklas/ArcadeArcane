@@ -1,12 +1,27 @@
+from datetime import time
+
 import arcade
 import arcade.gui
+import singleton
 
 WIDTH = 800
 HEIGHT = 600
 SPRITE_SCALING = 0.5
 TITLE = "ArcaneArcadeGames"
 
+class SingletonClass(object):
+  def __new__(cls):
+    if not hasattr(cls, 'instance'):
+      cls.instance = super(SingletonClass, cls).__new__(cls)
+    return cls.instance
+    musicPlayer = music.play()
+
 class MenuView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        music = arcade.load_sound("Hauptmenü.wav")
+        musikTest.musicPlayer = music.play()
+
     def on_show_view(self):
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -45,13 +60,16 @@ class MenuView(arcade.View):
     def on_click_quit(self,event):
         arcade.close_window()
 
-    def on_click_lauf(self,event):
+    def on_click_lauf(self, event):
+        musikTest.musicPlayer.pause()
+        self.clear()
         self.manager.disable()
         game = LaufGameView()
         self.window.show_view(game)
 
 
     def on_click_snake(self, event):
+        musikTest.musicPlayer.pause()
         self.manager.disable()
         game = SnakeView()
         self.window.show_view(game)
@@ -59,17 +77,16 @@ class MenuView(arcade.View):
 class SnakeView(arcade.View):
     def __init__(self):
         super().__init__()
+
+        music = arcade.load_sound("SnakeGame.wav")
+        musikTest.musicPlayer = music.play()
+
     def on_show_view(self):
         arcade.set_background_color(arcade.color.GREEN)
     def on_draw(self):
         self.clear()
 
-        arcade.draw_text("Ich bin eine Schlage SSSSS",
-                         WIDTH / 2,
-                         HEIGHT - 100,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="center")
+        arcade.draw_text("Ich bin eine Schlage SSSSS",WIDTH / 2,HEIGHT - 100,arcade.color.BLACK,font_size=20,anchor_x="center")
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ESCAPE:
@@ -80,11 +97,16 @@ class SnakeView(arcade.View):
 class LaufGameView(arcade.View):
     def __init__(self):
         super().__init__()
+
+
         self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png",
                                            SPRITE_SCALING)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 50
         self.player_sprite.velocity = [3, 3]
+
+        music = arcade.load_sound("LaufGame.wav")
+        musikTest.musicPlayer = music.play()
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.AMAZON)
@@ -93,7 +115,6 @@ class LaufGameView(arcade.View):
         self.clear()
         # Draw all the sprites.
         self.player_sprite.draw()
-
 
     def on_update(self, delta_time):
         # Call update on all sprites
@@ -116,9 +137,9 @@ class PauseView(arcade.View):
         super().__init__()
         self.game_view = game_view
 
+
     def on_show_view(self):
         arcade.set_background_color(arcade.color.RED)
-
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.v_box = arcade.gui.UIBoxLayout()
@@ -145,6 +166,7 @@ class PauseView(arcade.View):
         self.window.show_view(self.game_view)
 
     def hauptmenue_button(self,event):
+        musikTest.musicPlayer.pause()
         game = MenuView()
         self.window.show_view(game)
 
@@ -163,4 +185,5 @@ def main():
     arcade.run()
 
 if __name__ == "__main__":
+    musikTest = SingletonClass()
     main()
