@@ -1,6 +1,8 @@
 from datetime import time
 from random import randint, random, randrange
 from time import sleep
+from turtledemo.minimal_hanoi import play
+
 from PIL import Image
 
 import arcade
@@ -9,7 +11,6 @@ import singleton
 
 WIDTH = 1250
 HEIGHT = 750
-TILESIZE = 64
 SPRITE_SCALING = 0.5
 TITLE = "ArcaneArcadeGames"
 
@@ -19,12 +20,13 @@ class SingletonClass(object):
       cls.instance = super(SingletonClass, cls).__new__(cls)
     return cls.instance
     musicPlayer = music.play()
+    Score = 0
 
 class MenuView(arcade.View):
     def __init__(self):
         super().__init__()
-        #music = arcade.load_sound("Hauptmenü.wav")
-        #musikTest.musicPlayer = music.play()
+        music = arcade.load_sound("Hauptmenü.wav")
+        musikTest.musicPlayer = music.play()
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.WHITE)
@@ -65,7 +67,7 @@ class MenuView(arcade.View):
         arcade.close_window()
 
     def on_click_lauf(self, event):
-        #musikTest.musicPlayer.pause()
+        musikTest.musicPlayer.pause()
         self.clear()
         self.manager.disable()
         game = LaufGameView()
@@ -73,7 +75,7 @@ class MenuView(arcade.View):
 
 
     def on_click_snake(self, event):
-        #musikTest.musicPlayer.pause()
+        musikTest.musicPlayer.pause()
         self.manager.disable()
         game = SnakeView()
         self.window.show_view(game)
@@ -89,12 +91,16 @@ class GameOverView(arcade.View):
         self.manager.enable()
         self.v_box = arcade.gui.UIBoxLayout()
 
-        test = arcade.gui.UITextArea(text="GAME OVER", width=500, text_color=arcade.color.BLACK, font_size=30 )
+        test = arcade.gui.UITextArea(text="Score: " + str(SingletonClass.Score), width=200, text_color=arcade.color.BLACK, font_size=30 )
         self.v_box.add(test.with_space_around(bottom=20))
 
         haupt_button = arcade.gui.UIFlatButton(text="Hauptmenü", width=200)
         self.v_box.add(haupt_button.with_space_around(bottom=20))
 
+        replay_button = arcade.gui.UIFlatButton(text="New Game", width=200)
+        self.v_box.add(replay_button.with_space_around(bottom=20))
+
+        replay_button.on_click = self.replay_button
         haupt_button.on_click = self.hauptmenue_button
 
         self.manager.add(
@@ -103,17 +109,27 @@ class GameOverView(arcade.View):
                 anchor_y="center_y",
                 child=self.v_box))
 
+    def replay_button(self,event):
+        musikTest.musicPlayer.pause()
+        arcade.set_background_color(arcade.color.WHITE)
+        game = SnakeView()
+        self.window.show_view(game)
+
     def on_draw(self):
         self.clear()
         self.manager.draw()
 
     def hauptmenue_button(self,event):
+        musikTest.musicPlayer.pause()
         game = MenuView()
         self.window.show_view(game)
 
 class SnakeView(arcade.View):
     def __init__(self):
         super().__init__()
+
+        music = arcade.load_sound("SnakeMusic.wav")
+        musikTest.musicPlayer = music.play()
         self.score = 0
 
         self.moved = None
@@ -166,24 +182,30 @@ class SnakeView(arcade.View):
 
             arcade.draw_text("Score:" + str(self.score) ,20,HEIGHT - 20,arcade.color.BLACK)
 
+    def game_over(self):
+        SingletonClass.Score = self.score
+        game = GameOverView()
+        self.window.show_view(game)
+
     def update(self,delta_time):
         if self.snake_head == self.food_coords:
             self.score += 1
+            Score = self.score
             self.food_coords = [randrange(50,1200,50),randrange(50,700,50)]
             self.snake_coords.append(self.snake_coords[-1][0]+50)
 
         if self.moved:
             for i in range(2,len(self.snake_coords)):
                  if self.snake_head == self.snake_coords[i]:
-                    sleep(1);quit()
+                    sleep(1);self.game_over()
             if self.snake_head[0] < 50:
-                sleep(1);quit()
+                sleep(1);self.game_over()
             elif self.snake_head[0] > WIDTH - 50:
-                sleep(1);quit()
+                sleep(1);self.game_over()
             elif self.snake_head[1] < 50:
-                sleep(1),quit()
+                sleep(1),self.game_over()
             elif self.snake_head[1] > HEIGHT -50:
-                sleep(1),quit()
+                sleep(1),self.game_over()
             else:
                 self.snake_head = self.snake_coords[0]
                 self.new_head_position = [self.snake_head[0] + self.snake_move_x, self.snake_head[1] + self.snake_move_y]
@@ -233,8 +255,8 @@ class LaufGameView(arcade.View):
         self.player_sprite.center_y = 50
         self.player_sprite.velocity = [3, 3]
 
-       # music = arcade.load_sound("LaufGame.wav")
-        #musikTest.musicPlayer = music.play()
+        music = arcade.load_sound("LaufGame.wav")
+        musikTest.musicPlayer = music.play()
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.AMAZON)
@@ -295,7 +317,7 @@ class PauseView(arcade.View):
         self.window.show_view(self.game_view)
 
     def hauptmenue_button(self,event):
-        #musikTest.musicPlayer.pause()
+        musikTest.musicPlayer.pause()
         game = MenuView()
         self.window.show_view(game)
     def on_draw(self):
@@ -308,7 +330,7 @@ class PauseView(arcade.View):
             self.window.show_view(self.game_view)
 
 def main():
-    window = arcade.Window(WIDTH, HEIGHT,TITLE,fullscreen=False,update_rate=0.20)
+    window = arcade.Window(WIDTH, HEIGHT,TITLE,fullscreen=False,update_rate=0.08)
     menu = MenuView()
     window.show_view(menu)
     arcade.run()
