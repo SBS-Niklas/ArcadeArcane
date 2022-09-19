@@ -25,7 +25,7 @@ class SingletonClass(object):
 class MenuView(arcade.View):
     def __init__(self):
         super().__init__()
-        music = arcade.load_sound("Hauptmenü.wav")
+        music = arcade.load_sound("Sounds/Hauptmenü.wav")
         musikTest.musicPlayer = music.play()
 
     def on_show_view(self):
@@ -128,7 +128,7 @@ class SnakeView(arcade.View):
     def __init__(self):
         super().__init__()
 
-        music = arcade.load_sound("SnakeMusic.wav")
+        music = arcade.load_sound("Sounds/SnakeMusic.wav")
         musikTest.musicPlayer = music.play()
         self.score = 0
 
@@ -255,7 +255,7 @@ class LaufGameView(arcade.View):
         self.player_sprite.center_y = 50
         self.player_sprite.velocity = [3, 3]
 
-        music = arcade.load_sound("LaufGame.wav")
+        music = arcade.load_sound("Sounds/LaufGame.wav")
         musikTest.musicPlayer = music.play()
 
     def on_show_view(self):
