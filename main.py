@@ -13,6 +13,7 @@ WIDTH = 1250
 HEIGHT = 750
 SPRITE_SCALING = 0.5
 TITLE = "ArcaneArcadeGames"
+#test
 
 class SingletonClass(object):
   def __new__(cls):
@@ -127,12 +128,14 @@ class GameOverView(arcade.View):
 class SnakeView(arcade.View):
     def __init__(self):
         super().__init__()
+        self.window.set_update_rate(0.08)
 
         music = arcade.load_sound("Sounds/SnakeMusic.wav")
         musikTest.musicPlayer = music.play()
         self.score = 0
 
         self.moved = None
+        self.bug = None
         self.snake_image = arcade.Sprite("Snake.png",image_height=50,image_width=50)
         self.snake_coords = []
         self.snake_move_x = 0
@@ -188,6 +191,7 @@ class SnakeView(arcade.View):
         self.window.show_view(game)
 
     def update(self,delta_time):
+        self.bug = False
         if self.snake_head == self.food_coords:
             self.score += 1
             Score = self.score
@@ -215,25 +219,30 @@ class SnakeView(arcade.View):
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.D or key == arcade.key.A or  key == arcade.key.W:
             self.moved = True
+            self.bug = True
         if key == arcade.key.D and self.direction[0] != -1:
             self.snake_move_x = 50
             self.snake_move_y = 0
             self. direction = [1,0]
+            self.bug = True
 
         if key == arcade.key.A and self.direction[0] != 1:
             self.snake_move_x = -50
             self.snake_move_y = 0
             self. direction = [-1,0]
+            self.bug = True
 
         if key == arcade.key.W and self.direction[1] != -1:
             self.snake_move_x = 0
             self.snake_move_y = 50
             self.direction = [0, 1]
+            self.bug = True
 
         if key == arcade.key.S and self.direction[1] != 1:
             self.snake_move_x = 0
             self.snake_move_y = -50
             self.direction = [0, -1]
+            self.bug = True
 
         if key == arcade.key.ESCAPE:
             # pass self, the current view, to preserve this view's state
@@ -247,6 +256,7 @@ class SnakeView(arcade.View):
 class LaufGameView(arcade.View):
     def __init__(self):
         super().__init__()
+        self.window.set_update_rate(0.001)
 
 
         self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png",
@@ -330,7 +340,7 @@ class PauseView(arcade.View):
             self.window.show_view(self.game_view)
 
 def main():
-    window = arcade.Window(WIDTH, HEIGHT,TITLE,fullscreen=False,update_rate=0.08)
+    window = arcade.Window(WIDTH, HEIGHT,TITLE,fullscreen=False)
     menu = MenuView()
     window.show_view(menu)
     arcade.run()
