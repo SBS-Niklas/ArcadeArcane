@@ -15,6 +15,7 @@ SPRITE_SCALING = 0.5
 TITLE = "ArcaneArcadeGames"
 #test
 
+
 class SingletonClass(object):
   def __new__(cls):
     if not hasattr(cls, 'instance'):
