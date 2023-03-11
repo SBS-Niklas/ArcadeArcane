@@ -137,10 +137,10 @@ class PongInfoScreen(arcade.View):
         self.v_box = arcade.gui.UILayout()
 
         self.background = arcade.load_texture("Pictures/BackgroundMenü.jpg")
-        texture = arcade.load_texture("Singel.png")
+        texture = arcade.load_texture("Pictures/Singel.png")
         singelPlayer = arcade.gui.UITextureButton(x=(1536/2) -130, y=764, height=50, width=50, texture=texture)
         self.v_box.add(singelPlayer)
-        texture = arcade.load_texture("Zwei.png")
+        texture = arcade.load_texture("Pictures/Zwei.png")
         singelPlayer = arcade.gui.UITextureButton(x=(1536 / 2) - 130, y=700, height=50, width=50, texture=texture)
         self.v_box.add(singelPlayer)
 
