@@ -1,12 +1,11 @@
 from random import randint, random, randrange
 from time import sleep
 import arcade.gui
-from arcade.examples.sprite_move_joystick import DEAD_ZONE
 import random
 import arcade
 from arcade import Window, Section, View, SpriteList, SpriteSolidColor, \
     SpriteCircle, draw_text, draw_line
-from arcade.color import BLACK, BLUE, RED, BEAU_BLUE, GRAY, WHITE
+from arcade.color import BLACK, BLUE, RED, BEAU_BLUE, GRAY, WHITE, PURPLE_PIZZAZZ
 
 WIDTH = 1536
 HEIGHT = 864
@@ -33,8 +32,6 @@ PADDLE_HEIGHT = 80
 
 # Geschwindigkeit der Paddles
 PADDLE_SPEED = 5
-
-
 max_length_input = 4
 lastGame = 0
 lastView = 0
@@ -44,66 +41,43 @@ class MenuView(arcade.View):
     def __init__(self):
         super().__init__()
 
+        #Abspeicherung der Letzen View für GameOverScreen
         main.lastView = "MenuView"
 
-
+        #Joysticks erkenne
         joysticks = arcade.get_joysticks()
-
-
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
             self.joystick2 = joysticks[1]
-
-
             self.joystick.open()
             self.joystick2.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
             self.test = self.joystick2.push_handlers(self)
-
-
-
         else:
             # Handle if there are no joysticks.
             print("There are no joysticks, plug in a joystick and run again.")
             self.joystick = None
 
-    def on_show_view(self):
-
-
+    def on_show_view(self): #Die Angezeigten GUI Elemente werden erstellt und einem Manager hinzugefügt
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-
         self.v_box = arcade.gui.UILayout()
-
         self.background = arcade.load_texture("Pictures/BackgroundMenü.jpg")
 
         texture = arcade.load_texture("Pictures/SnakeVorschau.png")
-        start_snake_button = arcade.gui.UITextureButton(x=60, y=60, height=750, width=700, texture=texture)
+        start_snake_button = arcade.gui.UITextureButton(x=(1536/2) -550, y=(864/2)  -250, height=500, width=500, texture=texture)
         self.v_box.add(start_snake_button.with_space_around(bottom=0))
-        #start_snake_button = arcade.gui.UIFlatButton(text="Start Snake", width=200)
-        #self.v_box.add(start_snake_button.with_space_around(bottom=20))
 
         texture = arcade.load_texture("Pictures/Pong.png")
-        start_lauf_button = arcade.gui.UITextureButton(x=798, y=60, height=400, width=400, texture=texture)
-        self.v_box.add(start_lauf_button.with_space_around(bottom=0))
-        #start_lauf_button = arcade.gui.UIFlatButton(text="Start Laufmännchen/in", width=200)
-        #self.v_box.add(start_lauf_button.with_space_around(bottom=20))
+        start_pong_button = arcade.gui.UITextureButton(x=(1536/2) +50 , y=(864/2)  -250, height=500, width=500, texture=texture)
+        self.v_box.add(start_pong_button.with_space_around(bottom=0))
 
-        #quit_button = arcade.gui.UIFlatButton(text="Close", width=200)
-        #self.v_box.add(quit_button.with_space_around(bottom=20))
-
-        #test = arcade.gui.UITextArea(text="Press ESC in any Game for Menü",width=240, text_color= arcade.color.BLACK)
-        #self.v_box.add(test.with_space_around(bottom=20))
-
+        '''Nur für Maus steuerung nötig
         start_snake_button.on_click = self.on_click_snake
-        start_lauf_button.on_click = self.on_click_lauf
-        #quit_button.on_click = self.on_click_quit
-
+        start_pong_button.on_click = self.on_click_lauf'''
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -111,17 +85,14 @@ class MenuView(arcade.View):
                 anchor_y="center_y",
                 child=self.v_box))
 
-    def on_draw(self):
+    def on_draw(self): #Die im Manager Gespeicherten GUI Elemente werden geladen (angezeigt)
         self.clear()
         arcade.draw_lrwh_rectangle_textured(0, 0,
                                             1536, 864,
                                             self.background)
         self.manager.draw()
 
-    def on_click_quit(self,event):
-        arcade.close_window()
-
-    def on_joybutton_press(self, _joystick, button):
+    def on_joybutton_press(self, _joystick, button): #Joyticks(Buttons) werden mit den entsprechenden Befehlen verknüpft
         """ Handle button-down event for the joystick """
         if button == 10 and main.lastView == "MenuView":
             game = PongInfoScreen()
@@ -130,77 +101,79 @@ class MenuView(arcade.View):
             game = SnakeInfoScreen()
             self.window.show_view(game)
 
-
-
-
+    '''Nur für Maussteuerung nötig
     def on_click_lauf(self, event):
         self.clear()
         self.manager.disable()
         game = PongInfoScreen()
         self.window.show_view(game)
-
-
     def on_click_snake(self, event):
         self.manager.disable()
         game = SnakeViewZweispieler()
-        self.window.show_view(game)
+        self.window.show_view(game)'''
 class PongInfoScreen(arcade.View):
     def __init__(self):
         super().__init__()
 
+        # Abspeicherung der Letzen View für GameOverScreen
         main.lastView = "PongInfoScreen"
 
+        # Joysticks erkenne
         joysticks = arcade.get_joysticks()
-
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
             self.joystick2 = joysticks[1]
-
-            print("Hier")
             self.joystick.open()
             self.joystick2.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
             self.test = self.joystick2.push_handlers(self)
 
     def on_show_view(self):
-        arcade.set_background_color(arcade.color.AFRICAN_VIOLET)
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.v_box = arcade.gui.UILayout()
 
         self.background = arcade.load_texture("Pictures/BackgroundMenü.jpg")
+        texture = arcade.load_texture("Singel.png")
+        singelPlayer = arcade.gui.UITextureButton(x=(1536/2) -130, y=764, height=50, width=50, texture=texture)
+        self.v_box.add(singelPlayer)
+        texture = arcade.load_texture("Zwei.png")
+        singelPlayer = arcade.gui.UITextureButton(x=(1536 / 2) - 130, y=700, height=50, width=50, texture=texture)
+        self.v_box.add(singelPlayer)
 
-        game_Info_Singelplayer = arcade.gui.UILabel(text="Press    for Singelplayer",x=(1536/2)-150 ,y=764, font_size=30,text_color=arcade.color.AERO_BLUE)
+        game_Info_Singelplayer = arcade.gui.UILabel(text="Press       for Singelplayer",x=(1536/2)-250 ,y=764, font_size=30,text_color=WHITE)
         self.v_box.add(game_Info_Singelplayer.with_space_around(bottom=20))
-        game_Info_Multiplayer = arcade.gui.UILabel(text="Press    for Multiplayer", x=(1536 / 2) - 150, y=700, font_size=30,
-                                       text_color=arcade.color.AERO_BLUE)
+        game_Info_Multiplayer = arcade.gui.UILabel(text="Press       for Multiplayer",x= (1536 / 2) -250, y=700, font_size=30,text_color=WHITE)
         self.v_box.add(game_Info_Multiplayer.with_space_around(bottom=20))
 
-        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGSCORE", x=60, y=150, height=300, width=300, font_size=30)
+        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGESCORE 2PLAYER", x=60, y=150, height=300, width=300, font_size=30)
         self.v_box.add(game_Highsocre_Text)
+        game_Highsocre_Text_Singel = arcade.gui.UITextArea(text="HIGESCORE 1PLAYER", x=60, y=550, height=300, width=300,font_size=30)
+        self.v_box.add(game_Highsocre_Text)
+        self.v_box.add(game_Highsocre_Text_Singel)
 
         # Einlesen + Anzeigen HighscorePong
         f = open("Scores/ScorePongEinspieler.txt", "r")
         game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=60, height=300, width=300 ,font_size=30 )
         self.v_box.add(game_Highsocre)
-        print(f.read())
+        f = open("Scores/ScorePongZweispieler.txt", "r")
+        game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=450, height=300, width=300, font_size=30)
+        self.v_box.add(game_Highsocre)
         f.close()
 
-        game_Anleitung = arcade.gui.UITextArea(text="Einspieler: \nJoytick OBEN -> Padel OBEN \nJoystick UNTEN -> Padel UNTEN \n\nMultiplayer: \nJoystick RECHTS -> Padel RECHTS \nJoystick LINKS -> PADEL LINKS" , x=1100 ,y=60 ,height=750,width=400,font_size=25  )
-
+        game_Steuerung = arcade.gui.UITextArea(text="Steuerung 1Player: \nJoystick UP -> Padel UP \nJoystick Down -> Padel DOWN  \n\n Steuerung 2Player: \n Joystick Right -> Padel Right \n Joystick Left -> Padel Left  " , x=1000 ,y=0 ,height=400,width=600,font_size=25  )
+        game_Anleitung = arcade.gui.UITextArea(text="Beschreibung: \nZiel des Spieles ist es den Ball so oft es geht abzuwähren. Erreiche einen Höheren Score um in der Ranglsite angezeit zu werden!!  ",x=1100, y=450, height=400, width=450, font_size=25)
         self.v_box.add(game_Anleitung)
+        self.v_box.add(game_Steuerung)
 
         texture = arcade.load_texture("Pictures/Pong.png")
         start_lauf_button = arcade.gui.UITextureButton(x=450, y=60, height=500, width=500, texture=texture)
         self.v_box.add(start_lauf_button.with_space_around(bottom=0))
 
         start_lauf_button.on_click = self.on_click_pong
-
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -226,9 +199,7 @@ class PongInfoScreen(arcade.View):
 
     def on_draw(self):
         self.clear()
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            1536, 864,
-                                            self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0,1536, 864,self.background)
         self.manager.draw()
 class SnakeInfoScreen(arcade.View):
     def __init__(self):
@@ -237,24 +208,18 @@ class SnakeInfoScreen(arcade.View):
         main.lastView = "SnakeInfoScreen"
 
         joysticks = arcade.get_joysticks()
-
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
             self.joystick2 = joysticks[1]
-
-            print("Hier")
             self.joystick.open()
             self.joystick2.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
             self.test = self.joystick2.push_handlers(self)
 
     def on_show_view(self):
-        arcade.set_background_color(arcade.color.AFRICAN_VIOLET)
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.v_box = arcade.gui.UILayout()
@@ -281,18 +246,14 @@ class SnakeInfoScreen(arcade.View):
 
         self.v_box.add(game_Anleitung)
 
-        texture = arcade.load_texture("Pictures/Snake.png")
+        texture = arcade.load_texture("Pictures/SnakeVorschau.png")
         start_lauf_button = arcade.gui.UITextureButton(x=450, y=60, height=500, width=500, texture=texture)
         self.v_box.add(start_lauf_button.with_space_around(bottom=0))
 
         start_lauf_button.on_click = self.on_click_snake
 
-
         self.manager.add(
-            arcade.gui.UIAnchorWidget(
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box))
+            arcade.gui.UIAnchorWidget(anchor_x="center_x",anchor_y="center_y",child=self.v_box))
 
     def on_joybutton_press(self, _joystick, button):
         """ Handle button-down event for the joystick """
@@ -309,18 +270,31 @@ class SnakeInfoScreen(arcade.View):
 
     def on_draw(self):
         self.clear()
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            1536, 864,
-                                            self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0,1536, 864,self.background)
         self.manager.draw()
 class GameOverView(arcade.View):
     def __init__(self):
         super().__init__()
+        self.window.set_update_rate(0.02)
+        self.maus = arcade.SpriteCircle(color=PURPLE_PIZZAZZ, radius=10)
+        joysticks = arcade.get_joysticks()
+
+        if joysticks:
+            # Grab the first one in  the list
+            self.joystick = joysticks[0]
+            self.joystick2 = joysticks[1]
+            self.joystick.open()
+            self.joystick2.open()
+            # Push this object as a handler for joystick events.
+            # Required for the on_joy* events to be called.
+            self.joystick.push_handlers(self)
+            self.joystick2.push_handlers(self)
+
 
         main.lastView = "GameOver"
         width_button = 70
         height_button = 50
-
+        self.drücken = False
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -332,9 +306,11 @@ class GameOverView(arcade.View):
         # First Line
         self.firstLineLayout = arcade.gui.UIBoxLayout(vertical=False)
 
-        q_button = arcade.gui.UIFlatButton(text="Q", width=width_button, height=height_button)
-        self.firstLineLayout.children.append(q_button)
-        q_button.on_click = self.on_click_q
+        #self.q_button = arcade.gui.UIFlatButton(text="Q", width=width_button, height=height_button)
+        #self.firstLineLayout.children.append(self.q_button)
+        #self.q_button.on_click = self.on_click_q
+        self.q = SpriteSolidColor(width=width_button, height=height_button , color=WHITE)
+        self.q.set_position(20,20)
 
         w_button = arcade.gui.UIFlatButton(text="W", width=width_button, height=height_button)
         self.firstLineLayout.add(w_button)
@@ -449,9 +425,6 @@ class GameOverView(arcade.View):
         self.keyboardLayout.add(self.secondLineLayout)
         self.keyboardLayout.add(self.thirdLineLayout.with_space_around(bottom=20))
 
-
-
-
         haupt_button = arcade.gui.UIFlatButton(text="Mainmenue", width=200)
         self.keyboardLayout.add(haupt_button.with_space_around(bottom=20))
 
@@ -474,6 +447,11 @@ class GameOverView(arcade.View):
                 anchor_y="center_y",
                 child=self.keyboardLayout)
         )
+
+    def on_joybutton_press(self, _joystick, button):
+        if button == 2:
+            self.drücken = True
+
 
     def on_click_q(self, event):
         if len(self.ui_text_label.text) < max_length_input:
@@ -605,6 +583,57 @@ class GameOverView(arcade.View):
             self.pressed_key = "M"
             self.update_text()
 
+
+    def on_update(self, delta_time: float):
+        self.center_x = 0
+        self.center_y = 0
+
+        if self.joystick:
+            # x-axis
+            self.change_x = self.joystick.x
+            # y-axis
+            self.change_y = -self.joystick.y
+
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        if self.center_x == 1.0:
+            print(self.center_x)
+
+        if self.center_x == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_x == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_y == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_y == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_y != 1.0 and self.center_y != -1.0 and self.center_x != 1.0 and self.center_x != -1.0:
+            self.on_key_release(self, 1)
+
+        self.maus.update()
+
+        if self.maus.collides_with_sprite(self.q) and self.drücken == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "Q"
+                self.update_text()
+            self.drücken = False
+
+    def on_key_press(self, symbol: int, modifiers: int):
+
+            if self.center_y == -1.0:
+                self.maus.change_y = 5
+            if self.center_y == 1.0:
+                self.maus.change_y = -5
+            if self.center_x == -1.0:
+                self.maus.change_x = 5
+            if self.center_x == 1.0:
+                self.maus.change_x = -5
+
+    def on_key_release(self, _symbol: int, _modifiers: int):
+            self.maus.stop()
+
+
     def update_text(self):
         label_text = self.ui_text_label.text
         self.ui_text_label.text = label_text + self.pressed_key
@@ -627,10 +656,10 @@ class GameOverView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            1536, 864,
-                                            self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0,1536, 864,self.background)
         self.manager.draw()
+        self.q.draw()
+        self.maus.draw()
     def hauptmenue_button(self,event):
         game = MenuView()
         self.window.show_view(game)
@@ -658,21 +687,14 @@ class SnakeViewZweispieler(arcade.View):
 
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
             self.joystick2 = joysticks[1]
-
             self.joystick.open()
             self.joystick2.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
             self.joystick2.push_handlers(self)
-        else:
-            # Handle if there are no joysticks.
-            print("There are no joysticks, plug in a joystick and run again.")
-            self.joystick = None
 
         self.score = 0
 
@@ -680,7 +702,7 @@ class SnakeViewZweispieler(arcade.View):
         self.moved = None
         self.bug = None
 
-        self.snake_image = arcade.Sprite("Pictures/Snake.png", image_height=50, image_width=50)
+        self.snake_image = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
         self.snake_coords = []
         self.snake_move_x = 0
         self.snake_move_y = 20
@@ -700,17 +722,17 @@ class SnakeViewZweispieler(arcade.View):
 
         self.moved2 = None
         self.bug2 = None
-        self.snake_image2 = arcade.Sprite("Pictures/Snake.png", image_height=50, image_width=50)
+        self.snake_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
         self.snake_coords2 = []
         self.snake_move_x2 = 0
         self.snake_move_y2 = 20
 
-        self.head_image2 = arcade.Sprite("Pictures/Snake.png", image_height=50, image_width=50)
+        self.head_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
         self.snake_head2 = None
         self.new_head_position2 = None
         self.direction2 = [0, 1]
 
-        self.food_image2 = arcade.Sprite("Pictures/Snake.png", image_height=50, image_width=50)
+        self.food_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
         self.food2 = None
         self.food_coords2 = []
 
@@ -767,7 +789,8 @@ class SnakeViewZweispieler(arcade.View):
         for x,y in self.snake_coords[1:]:
             self.snake_image.center_x = x;self.snake_image.center_y = y
             self.snake_image.draw()
-            arcade.draw_text("Score:" + str(self.score) ,20,HEIGHT - 20,arcade.color.WHITE)
+            arcade.draw_text("Score:" + str(self.score) ,10,
+                      self.window.height - 40, WHITE, font_size=30)
 
         for x,y in self.snake_coords2[1:]:
             self.snake_image2.center_x = x ;self.snake_image2.center_y = y
@@ -979,24 +1002,17 @@ class SnakeViewEinspieler(arcade.View):
 
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
-
             self.joystick.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
-        else:
-            # Handle if there are no joysticks.
-            print("There are no joysticks, plug in a joystick and run again.")
-            self.joystick = None
 
         self.score = 0
         self.moved = None
         self.bug = None
 
-        self.snake_image = arcade.Sprite("Pictures/Snake.png", image_height=50, image_width=50)
+        self.snake_image = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
         self.snake_coords = []
         self.snake_move_x = 0
         self.snake_move_y = 20
@@ -1020,7 +1036,6 @@ class SnakeViewEinspieler(arcade.View):
         if button == 2 and main.lastView == "SnakeViewEinspieler":
             game = PauseView(self)
             self.window.show_view(game)
-
 
     def setup(self):
         self.snake_coords = [[400, 400], [400, 350], [400, 300]]
@@ -1046,14 +1061,11 @@ class SnakeViewEinspieler(arcade.View):
         self.food_image.center_y = self.food_coords[1]
         self.food_image.draw()
 
-
         for x, y in self.snake_coords[1:]:
             self.snake_image.center_x = x
             self.snake_image.center_y = y
             self.snake_image.draw()
-            arcade.draw_text("Score:" + str(self.score), 20, HEIGHT - 20, arcade.color.BLACK)
-
-
+            arcade.draw_text("Score:" + str(self.score) ,10,self.window.height - 40, WHITE, font_size=30)
 
     def game_over(self):
         main.lastGame = 1
@@ -1077,18 +1089,11 @@ class SnakeViewEinspieler(arcade.View):
         if self.center_x == 1.0:
             print(self.center_x)
 
-
-
-
-
-
         if self.snake_head == self.food_coords:
             self.score += 1
             Score = self.score
             self.food_coords = [randrange(50, 1200, 50), randrange(50, 700, 50)]
             self.snake_coords.append(self.snake_coords[-1][0] + 50)
-
-
 
         if self.center_x == 1.0:
             self.on_key_press(self, 1)
@@ -1098,8 +1103,6 @@ class SnakeViewEinspieler(arcade.View):
             self.on_key_press(self, 1)
         if self.center_y == -1.0:
             self.on_key_press(self, 1)
-
-
 
         if self.moved:
 
@@ -1123,11 +1126,7 @@ class SnakeViewEinspieler(arcade.View):
                                           self.snake_head[1] + self.snake_move_y]
                 self.snake_coords = [self.new_head_position] + self.snake_coords[:-1]
 
-
-
     def on_key_press(self, key, _modifiers):
-        print("KeyPress")
-
 
         if self.center_x == 1.0 or self.center_x == -1.0 or self.center_y == -1.0:
             self.moved = True
@@ -1164,28 +1163,18 @@ class PongView(arcade.View):
     def __init__(self):
             super().__init__()
             main.lastView = "PongView"
-            joysticks = arcade.get_joysticks()
 
+            joysticks = arcade.get_joysticks()
             if joysticks:
                 # Grab the first one in  the list
-
                 self.joystick = joysticks[0]
                 self.joystick2 = joysticks[1]
-
-                print("Hier")
                 self.joystick.open()
                 self.joystick2.open()
-
                 # Push this object as a handler for joystick events.
                 # Required for the on_joy* events to be called.
                 self.joystick.push_handlers(self)
                 self.joystick2.push_handlers(self)
-            else:
-                # Handle if there are no joysticks.
-                print("There are no joysticks, plug in a joystick and run again.")
-                self.joystick = None
-
-
 
             self.SPEED = 5
             self.counter = 0
@@ -1193,7 +1182,7 @@ class PongView(arcade.View):
             self.background = arcade.load_texture("Pictures/GameBackground.png")
 
             self.paddles: SpriteList = SpriteList()
-            self.bot: SpriteSolidColor = SpriteSolidColor(10, 100, BLACK)
+            self.bot: SpriteSolidColor = SpriteSolidColor(10, 100, WHITE)
             self.right_player: SpriteSolidColor = SpriteSolidColor(10, 100, WHITE)
 
             self.paddles.append(self.bot)
@@ -1201,12 +1190,12 @@ class PongView(arcade.View):
 
             self.ball: SpriteCircle = SpriteCircle(10, RED)
 
-
-    def on_joybutton_press(self, _joystick, button):
+    def on_joybutton_release(self, _joystick, button):
         """ Handle button-down event for the joystick """
         if button == 2 and main.lastView == "PongView":
             game = PauseView(self)
             self.window.show_view(game)
+
         if button == 9 and main.lastView == "PongView":
             game = PauseView(self)
             self.window.show_view(game)
@@ -1223,16 +1212,36 @@ class PongView(arcade.View):
             self.counter = 0
 
     def on_update(self, delta_time: float):
+            main.lastView = "PongView"
             self.ball.update()
             self.bot.update()
             self.right_player.update()
 
+            self.center_x = 0
             self.center_y = 0
+
             if self.joystick:
+                # x-axis
+                self.change_x = self.joystick.x
                 # y-axis
                 self.change_y = -self.joystick.y
 
+            self.center_x += self.change_x
+            self.center_y += self.change_y
 
+            if self.center_x == 1.0:
+                print(self.center_x)
+
+            if self.center_x == 1.0:
+                self.on_key_press(self, 1)
+            if self.center_x == -1.0:
+                self.on_key_press(self, 1)
+            if self.center_y == 1.0:
+                self.on_key_press(self, 1)
+            if self.center_y == -1.0:
+                self.on_key_press(self, 1)
+            if self.center_y != 1.0 and self.center_y != -1.0:
+                self.on_key_release(self, 1)
 
             # bounce ball
             if self.ball.bottom <= 0:
@@ -1281,14 +1290,15 @@ class PongView(arcade.View):
             if self.ball.left >= self.window.width:
                 self.end_game()
 
-
-
     def on_key_press(self, symbol: int, modifiers: int):
             if symbol == arcade.key.UP:
                 self.right_player.change_y = PLAYER_PADDLE_SPEED
             if symbol == arcade.key.DOWN:
                 self.right_player.change_y = -PLAYER_PADDLE_SPEED
-            #if symbol == self.joystick.
+            if self.center_y == -1.0:
+                self.right_player.change_y = PLAYER_PADDLE_SPEED
+            if self.center_y == 1.0:
+                self.right_player.change_y = -PLAYER_PADDLE_SPEED
 
     def on_key_release(self, _symbol: int, _modifiers: int):
             self.right_player.stop()
@@ -1303,8 +1313,8 @@ class PongView(arcade.View):
             self.clear()
             arcade.draw_lrwh_rectangle_textured(0, 0, 1536, 864, self.background)
 
-            draw_text(f'Score: {self.counter}', self.window.width - 470,
-                      self.window.height / 2, BLUE, font_size=30)
+            draw_text(f'Score: {self.counter}', 40,
+                      self.window.height - 50, WHITE, font_size=30)
 
             half_window_x = self.window.width / 2
             draw_line(half_window_x, 0, half_window_x, self.window.height, GRAY, 2)
@@ -1323,27 +1333,23 @@ class PauseView(arcade.View):
 
         if joysticks:
             # Grab the first one in  the list
-
             self.joystick = joysticks[0]
             self.joystick2 = joysticks[1]
-
-            print("Hier")
             self.joystick.open()
             self.joystick2.open()
-
             # Push this object as a handler for joystick events.
             # Required for the on_joy* events to be called.
             self.joystick.push_handlers(self)
             self.test = self.joystick2.push_handlers(self)
-
-
         self.background = arcade.load_texture("Pictures/BackgroundMenü.jpg")
-    def on_joybutton_press(self, _joystick, button):
+    def on_joybutton_release(self, _joystick, button):
         """ Handle button-down event for the joystick """
         if button == 2 and main.lastView == "PauseView":
             self.window.show_view(self.game_view)
         if button == 9 and main.lastView == "PauseView":
             self.window.show_view(self.game_view)
+    def on_update(self,delta_time):
+        print("Updated")
     def on_show_view(self):
         arcade.set_background_color(arcade.color.RED)
         self.manager = arcade.gui.UIManager()
@@ -1362,26 +1368,18 @@ class PauseView(arcade.View):
         haupt_button.on_click = self.hauptmenue_button
         resume_button.on_click = self.resume_button
 
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box))
+        self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center_x",anchor_y="center_y",child=self.v_box))
 
     def resume_button(self, event):
         arcade.set_background_color(arcade.color.WHITE)
         self.window.show_view(self.game_view)
-
     def hauptmenue_button(self,event):
         game = MenuView()
         self.window.show_view(game)
     def on_draw(self):
         self.clear()
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            1536, 864,
-                                            self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0,1536, 864,self.background)
         self.manager.draw()
-
 
     def on_key_press(self, key, _modifiers):
         if key == arcade.key.ESCAPE:   # resume game
