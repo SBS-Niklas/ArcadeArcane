@@ -4,7 +4,7 @@ import arcade.gui
 import random
 import arcade
 from arcade import Window, Section, View, SpriteList, SpriteSolidColor, \
-    SpriteCircle, draw_text, draw_line
+    SpriteCircle, draw_text, draw_line, Sprite
 from arcade.color import BLACK, BLUE, RED, BEAU_BLUE, GRAY, WHITE, PURPLE_PIZZAZZ
 
 WIDTH = 1536
@@ -144,28 +144,28 @@ class PongInfoScreen(arcade.View):
         singelPlayer = arcade.gui.UITextureButton(x=(1536 / 2) - 130, y=700, height=50, width=50, texture=texture)
         self.v_box.add(singelPlayer)
 
-        game_Info_Singelplayer = arcade.gui.UILabel(text="Press       for Singelplayer",x=(1536/2)-250 ,y=764, font_size=30,text_color=WHITE)
+        game_Info_Singelplayer = arcade.gui.UILabel(text="Press       for Singleplayer",x=(1536/2)-250 ,y=764, font_size=30,text_color=WHITE)
         self.v_box.add(game_Info_Singelplayer.with_space_around(bottom=20))
         game_Info_Multiplayer = arcade.gui.UILabel(text="Press       for Multiplayer",x= (1536 / 2) -250, y=700, font_size=30,text_color=WHITE)
         self.v_box.add(game_Info_Multiplayer.with_space_around(bottom=20))
 
-        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGESCORE 2PLAYER", x=60, y=150, height=300, width=300, font_size=30)
+        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGHSCORE 2PLAYER", x=60, y=150, height=300, width=300, font_size=30, text_color=PURPLE_PIZZAZZ)
         self.v_box.add(game_Highsocre_Text)
-        game_Highsocre_Text_Singel = arcade.gui.UITextArea(text="HIGESCORE 1PLAYER", x=60, y=550, height=300, width=300,font_size=30)
+        game_Highsocre_Text_Singel = arcade.gui.UITextArea(text="HIGHSCORE 1PLAYER", x=60, y=550, height=300, width=300,font_size=30, text_color=PURPLE_PIZZAZZ)
         self.v_box.add(game_Highsocre_Text)
         self.v_box.add(game_Highsocre_Text_Singel)
 
         # Einlesen + Anzeigen HighscorePong
-        f = open("Scores/ScorePongEinspieler.txt", "r")
+        f = open("Scores/ScorePongZweispieler.txt", "r")
         game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=60, height=300, width=300 ,font_size=30 )
         self.v_box.add(game_Highsocre)
-        f = open("Scores/ScorePongZweispieler.txt", "r")
+        f = open("Scores/ScorePongEinspieler.txt", "r")
         game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=450, height=300, width=300, font_size=30)
         self.v_box.add(game_Highsocre)
         f.close()
 
-        game_Steuerung = arcade.gui.UITextArea(text="Steuerung 1Player: \nJoystick UP -> Padel UP \nJoystick Down -> Padel DOWN  \n\n Steuerung 2Player: \n Joystick Right -> Padel Right \n Joystick Left -> Padel Left  " , x=1000 ,y=0 ,height=400,width=600,font_size=25  )
-        game_Anleitung = arcade.gui.UITextArea(text="Beschreibung: \nZiel des Spieles ist es den Ball so oft es geht abzuwähren. Erreiche einen Höheren Score um in der Ranglsite angezeit zu werden!!  ",x=1100, y=450, height=400, width=450, font_size=25)
+        game_Steuerung = arcade.gui.UITextArea(text="Steuerung 1Player: \nJoystick UP -> Paddle UP \nJoystick Down -> Paddle DOWN  \n\n Steuerung 2Player: \n Joystick Right -> Padel Right \n Joystick Left -> Paddle Left  " , x=1000 ,y=0 ,height=400,width=600,font_size=25  )
+        game_Anleitung = arcade.gui.UITextArea(text="Beschreibung: \nZiel des Spieles ist es den Ball so oft es geht abzuwehren. Erreiche einen höheren Score um in der Rangliste angezeigt zu werden!!  ",x=1100, y=450, height=400, width=450, font_size=25)
         self.v_box.add(game_Anleitung)
         self.v_box.add(game_Steuerung)
 
@@ -184,16 +184,16 @@ class PongInfoScreen(arcade.View):
     def on_joybutton_press(self, _joystick, button):
         """ Handle button-down event for the joystick """
         if button == 4 and main.lastView == "PongInfoScreen":
-            game = PongView()
+            game = PongViewZweispieler()
             game.setup()
             self.window.show_view(game)
         if button == 5 and main.lastView == "PongInfoScreen":
-            game = PongView()
+            game = PongViewEinspieler()
             game.setup()
             self.window.show_view(game)
     def on_click_pong(self, event):
         self.manager.disable()
-        game = PongView()
+        game = PongViewEinspieler()
         game.setup()
         self.window.show_view(game)
 
@@ -226,25 +226,45 @@ class SnakeInfoScreen(arcade.View):
 
         self.background = arcade.load_texture("Pictures/BackgroundMenü.jpg")
 
-        game_Info_Singelplayer = arcade.gui.UILabel(text="Press    for Singelplayer",x=(1536/2)-150 ,y=764, font_size=30,text_color=arcade.color.AERO_BLUE)
+        texture = arcade.load_texture("Pictures/Singel.png")
+        singelPlayer = arcade.gui.UITextureButton(x=(1536 / 2) - 130, y=764, height=50, width=50, texture=texture)
+        self.v_box.add(singelPlayer)
+        texture = arcade.load_texture("Pictures/Zwei.png")
+        singelPlayer = arcade.gui.UITextureButton(x=(1536 / 2) - 130, y=700, height=50, width=50, texture=texture)
+        self.v_box.add(singelPlayer)
+
+        game_Info_Singelplayer = arcade.gui.UILabel(text="Press       for Singleplayer", x=(1536 / 2) - 250, y=764,
+                                                    font_size=30, text_color=WHITE)
         self.v_box.add(game_Info_Singelplayer.with_space_around(bottom=20))
-        game_Info_Multiplayer = arcade.gui.UILabel(text="Press    for Multiplayer", x=(1536 / 2) - 150, y=700, font_size=30,
-                                       text_color=arcade.color.AERO_BLUE)
+        game_Info_Multiplayer = arcade.gui.UILabel(text="Press       for Multiplayer", x=(1536 / 2) - 250, y=700,
+                                                   font_size=30, text_color=WHITE)
         self.v_box.add(game_Info_Multiplayer.with_space_around(bottom=20))
 
-        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGSCORE", x=60, y=150, height=300, width=300, font_size=30)
+        game_Highsocre_Text = arcade.gui.UITextArea(text="HIGHSCORE 2PLAYER", x=60, y=150, height=300, width=300,
+                                                    font_size=30, text_color=PURPLE_PIZZAZZ)
         self.v_box.add(game_Highsocre_Text)
+        game_Highsocre_Text_Singel = arcade.gui.UITextArea(text="HIGHSCORE 1PLAYER", x=60, y=550, height=300, width=300,
+                                                           font_size=30, text_color=PURPLE_PIZZAZZ)
+        self.v_box.add(game_Highsocre_Text)
+        self.v_box.add(game_Highsocre_Text_Singel)
 
         # Einlesen + Anzeigen HighscorePong
-        f = open("Scores/ScorePongEinspieler.txt", "r")
-        game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=60, height=300, width=300 ,font_size=30 )
+        f = open("Scores/ScoreSnakeZweispieler.txt", "r")
+        game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=60, height=300, width=300, font_size=30)
         self.v_box.add(game_Highsocre)
-        print(f.read())
+        f = open("Scores/ScoreSnakeEinspieler.txt", "r")
+        game_Highsocre = arcade.gui.UITextArea(text=f.read(), x=60, y=450, height=300, width=300, font_size=30)
+        self.v_box.add(game_Highsocre)
         f.close()
 
-        game_Anleitung = arcade.gui.UITextArea(text="Einspieler: \nJoytick OBEN -> Padel OBEN \nJoystick UNTEN -> Padel UNTEN \n\nMultiplayer: \nJoystick RECHTS -> Padel RECHTS \nJoystick LINKS -> PADEL LINKS" , x=1100 ,y=60 ,height=750,width=400,font_size=25  )
-
+        game_Steuerung = arcade.gui.UITextArea(
+            text="Steuerung 1Player: \nJoystick UP -> Snake UP \nJoystick LEFT -> Snake LEFT\nJoystick RIGHT -> Snake RIGHT\nJoystick Down -> Snake DOWN  \n\nSteuerung 2Player: \nJoystick UP -> Snake UP \nJoystick LEFT -> Snake LEFT\nJoystick RIGHT -> Snake RIGHT\nJoystick Down -> Snake DOWN  ",
+            x=1025, y=-50, height=500, width=600, font_size=25)
+        game_Anleitung = arcade.gui.UITextArea(
+            text="Beschreibung: \nZiel des Spiels ist es so viele 'Früchte' wie möglich zu essen. VORSICHT: Wenn du dich selbst oder eine andere Schlange frisst hast du verloren! Solltest du dich außerhalb des Spielfeldes bewegen hast du auch verloren!",
+            x=1050, y=450, height=400, width=450, font_size=25)
         self.v_box.add(game_Anleitung)
+        self.v_box.add(game_Steuerung)
 
         texture = arcade.load_texture("Pictures/SnakeVorschau.png")
         start_lauf_button = arcade.gui.UITextureButton(x=450, y=60, height=500, width=500, texture=texture)
@@ -275,9 +295,12 @@ class SnakeInfoScreen(arcade.View):
 class GameOverView(arcade.View):
     def __init__(self):
         super().__init__()
+
         self.window.set_update_rate(0.02)
         self.maus = arcade.SpriteCircle(color=PURPLE_PIZZAZZ, radius=10)
+        self.maus.set_position(center_x=770,center_y=340)
         joysticks = arcade.get_joysticks()
+
 
         if joysticks:
             # Grab the first one in  the list
@@ -294,151 +317,139 @@ class GameOverView(arcade.View):
         main.lastView = "GameOver"
         width_button = 70
         height_button = 50
-        self.drücken = False
+        self.press = False
 
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
 
-        arcade.set_background_color(arcade.color.DARK_BLUE_GRAY)
+        self.ui_text_label = arcade.gui.UILabel( x=100, y=1536/2, text='', width=200, height=30, align='center', font_size=20)
 
-        self.ui_text_label = arcade.gui.UILabel(text='', width=200, height=30, align='center', font_size=20)
 
         # First Line
-        self.firstLineLayout = arcade.gui.UIBoxLayout(vertical=False)
+        self.firstLineList = arcade.SpriteList()
 
-        #self.q_button = arcade.gui.UIFlatButton(text="Q", width=width_button, height=height_button)
-        #self.firstLineLayout.children.append(self.q_button)
-        #self.q_button.on_click = self.on_click_q
-        self.q = SpriteSolidColor(width=width_button, height=height_button , color=WHITE)
-        self.q.set_position(20,20)
+        self.q_button = Sprite("keyboard_keys/q_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.q_button)
+        self.q_button.set_position(1536/2 -450 , 800)
 
-        w_button = arcade.gui.UIFlatButton(text="W", width=width_button, height=height_button)
-        self.firstLineLayout.add(w_button)
-        w_button.on_click = self.on_click_w
+        self.w_button = Sprite("keyboard_keys/w_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.w_button)
+        self.w_button.set_position(1536/2 -350, 800)
 
-        e_button = arcade.gui.UIFlatButton(text="E", width=width_button, height=height_button)
-        self.firstLineLayout.add(e_button)
-        e_button.on_click = self.on_click_e
+        self.e_button = Sprite("keyboard_keys/e_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.e_button)
+        self.e_button.set_position(1536/2 -250, 800)
 
-        r_button = arcade.gui.UIFlatButton(text="R", width=width_button, height=height_button)
-        self.firstLineLayout.add(r_button)
-        r_button.on_click = self.on_click_r
+        self.r_button = Sprite("keyboard_keys/r_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.r_button)
+        self.r_button.set_position(1536/2 -150, 800)
 
-        t_button = arcade.gui.UIFlatButton(text="T", width=width_button, height=height_button)
-        self.firstLineLayout.children.append(t_button)
-        t_button.on_click = self.on_click_t
+        self.t_button = Sprite("keyboard_keys/t_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.t_button)
+        self.t_button.set_position(1536/2 -50, 800)
 
-        z_button = arcade.gui.UIFlatButton(text="Z", width=width_button, height=height_button)
-        self.firstLineLayout.add(z_button)
-        z_button.on_click = self.on_click_z
+        self.z_button = Sprite("keyboard_keys/z_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.z_button)
+        self.z_button.set_position(1536/2 +50, 800)
 
-        u_button = arcade.gui.UIFlatButton(text="U", width=width_button, height=height_button)
-        self.firstLineLayout.add(u_button)
-        u_button.on_click = self.on_click_u
+        self.u_button = Sprite("keyboard_keys/u_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.u_button)
+        self.u_button.set_position(1536/2 +150, 800)
 
-        i_button = arcade.gui.UIFlatButton(text="I", width=width_button, height=height_button)
-        self.firstLineLayout.add(i_button)
-        i_button.on_click = self.on_click_i
+        self.i_button = Sprite("keyboard_keys/i_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.i_button)
+        self.i_button.set_position(1536/2 +250, 800)
 
-        o_button = arcade.gui.UIFlatButton(text="O", width=width_button, height=height_button)
-        self.firstLineLayout.add(o_button)
-        o_button.on_click = self.on_click_o
+        self.o_button = Sprite("keyboard_keys/o_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.o_button)
+        self.o_button.set_position(1536/2 +350, 800)
 
-        p_button = arcade.gui.UIFlatButton(text="P", width=width_button, height=height_button)
-        self.firstLineLayout.add(p_button)
-        p_button.on_click = self.on_click_p
+        self.p_button = Sprite("keyboard_keys/p_button.png", image_width=width_button, image_height=height_button)
+        self.firstLineList.append(self.p_button)
+        self.p_button.set_position(1536/2 +450, 800)
 
         # Second Line
-        self.secondLineLayout = arcade.gui.UIBoxLayout(vertical=False)
+        self.secondLineList = arcade.SpriteList()
 
-        a_button = arcade.gui.UIFlatButton(text="A", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(a_button)
-        a_button.on_click = self.on_click_a
+        self.a_button = Sprite("keyboard_keys/a_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.a_button)
+        self.a_button.set_position(1536/2 -400, 730)
 
-        s_button = arcade.gui.UIFlatButton(text="S", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(s_button)
-        s_button.on_click = self.on_click_s
+        self.s_button = Sprite("keyboard_keys/s_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.s_button)
+        self.s_button.set_position(1536/2 -300, 730)
 
-        d_button = arcade.gui.UIFlatButton(text="D", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(d_button)
-        d_button.on_click = self.on_click_d
+        self.d_button = Sprite("keyboard_keys/d_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.d_button)
+        self.d_button.set_position(1536/2 -200, 730)
 
-        f_button = arcade.gui.UIFlatButton(text="F", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(f_button)
-        f_button.on_click = self.on_click_f
+        self.f_button = Sprite("keyboard_keys/f_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.f_button)
+        self.f_button.set_position(1536/2 -100, 730)
 
-        g_button = arcade.gui.UIFlatButton(text="G", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(g_button)
-        g_button.on_click = self.on_click_g
+        self.g_button = Sprite("keyboard_keys/g_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.g_button)
+        self.g_button.set_position(1536/2 , 730)
 
-        h_button = arcade.gui.UIFlatButton(text="H", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(h_button)
-        h_button.on_click = self.on_click_h
+        self.h_button = Sprite("keyboard_keys/h_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.h_button)
+        self.h_button.set_position(1536/2 +100, 730)
 
-        j_button = arcade.gui.UIFlatButton(text="J", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(j_button)
-        j_button.on_click = self.on_click_j
+        self.j_button = Sprite("keyboard_keys/j_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.j_button)
+        self.j_button.set_position(1536/2 +200, 730)
 
-        k_button = arcade.gui.UIFlatButton(text="K", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(k_button)
-        k_button.on_click = self.on_click_k
+        self.k_button = Sprite("keyboard_keys/k_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.k_button)
+        self.k_button.set_position(1536/2 +300, 730)
 
-        l_button = arcade.gui.UIFlatButton(text="L", width=width_button, height=height_button)
-        self.secondLineLayout.children.append(l_button)
-        l_button.on_click = self.on_click_l
+        self.l_button = Sprite("keyboard_keys/l_button.png", image_width=width_button, image_height=height_button)
+        self.secondLineList.append(self.l_button)
+        self.l_button.set_position(1536/2 +400, 730)
 
         # Third Line
-        self.thirdLineLayout = arcade.gui.UIBoxLayout(vertical=False)
+        self.thirdLineList = arcade.SpriteList()
 
-        y_button = arcade.gui.UIFlatButton(text="Y", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(y_button)
-        y_button.on_click = self.on_click_y
+        self.y_button = Sprite("keyboard_keys/y_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.y_button)
+        self.y_button.set_position(1536/2 -300, 660)
 
-        x_button = arcade.gui.UIFlatButton(text="X", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(x_button)
-        x_button.on_click = self.on_click_x
+        self.x_button = Sprite("keyboard_keys/x_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.x_button)
+        self.x_button.set_position(1536/2 -200, 660)
 
-        c_button = arcade.gui.UIFlatButton(text="C", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(c_button)
-        c_button.on_click = self.on_click_c
+        self.c_button = Sprite("keyboard_keys/c_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.c_button)
+        self.c_button.set_position(1536/2 -100, 660)
 
-        v_button = arcade.gui.UIFlatButton(text="V", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(v_button)
-        v_button.on_click = self.on_click_v
+        self.v_button = Sprite("keyboard_keys/v_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.v_button)
+        self.v_button.set_position(1536/2 , 660)
 
-        b_button = arcade.gui.UIFlatButton(text="B", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(b_button)
-        b_button.on_click = self.on_click_b
+        self.b_button = Sprite("keyboard_keys/b_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.b_button)
+        self.b_button.set_position(1536/2 + 100, 660)
 
-        n_button = arcade.gui.UIFlatButton(text="N", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(n_button)
-        n_button.on_click = self.on_click_n
+        self.n_button = Sprite("keyboard_keys/n_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.n_button)
+        self.n_button.set_position(1536/2 +200, 660)
 
-        m_button = arcade.gui.UIFlatButton(text="M", width=width_button, height=height_button)
-        self.thirdLineLayout.children.append(m_button)
-        m_button.on_click = self.on_click_m
+        self.m_button = Sprite("keyboard_keys/m_button.png", image_width=width_button, image_height=height_button)
+        self.thirdLineList.append(self.m_button)
+        self.m_button.set_position(1536/2 +300, 660)
 
         # Keyboard Layout
         self.keyboardLayout = arcade.gui.UIBoxLayout()
         self.keyboardLayout.add(self.ui_text_label)
-        self.keyboardLayout.add(self.firstLineLayout)
-        self.keyboardLayout.add(self.secondLineLayout)
-        self.keyboardLayout.add(self.thirdLineLayout.with_space_around(bottom=20))
 
-        haupt_button = arcade.gui.UIFlatButton(text="Mainmenue", width=200)
-        self.keyboardLayout.add(haupt_button.with_space_around(bottom=20))
+        self.main_button = Sprite("keyboard_keys/main_button.png", image_width=200, image_height=50)
+        self.main_button.set_position(764, 80)
 
-        replay_button = arcade.gui.UIFlatButton(text="New Game", width=200)
-        self.keyboardLayout.add(replay_button.with_space_around(bottom=20))
+        self.replay_button = Sprite("keyboard_keys/newgame_button.png", image_width=200, image_height=50)
+        self.replay_button.set_position(764, 140)
 
-        save_button = arcade.gui.UIFlatButton(text="SAVE", width=200)
-        self.keyboardLayout.add(save_button.with_space_around(bottom=20))
-
-
-        replay_button.on_click = self.replay_button
-        haupt_button.on_click = self.hauptmenue_button
-        save_button.on_click = self.save_button
-
+        self.save_button = Sprite("keyboard_keys/save_button.png", image_width=200, image_height=50)
+        self.save_button.set_position(764, 200)
 
         # Create a widget to hold the v_box widget, that will center the buttons
         self.manager.add(
@@ -450,139 +461,7 @@ class GameOverView(arcade.View):
 
     def on_joybutton_press(self, _joystick, button):
         if button == 2:
-            self.drücken = True
-
-
-    def on_click_q(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "Q"
-            self.update_text()
-
-    def on_click_w(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "W"
-            self.update_text()
-
-    def on_click_e(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "E"
-            self.update_text()
-
-    def on_click_r(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "R"
-            self.update_text()
-
-    def on_click_t(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "T"
-            self.update_text()
-
-    def on_click_z(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "Z"
-            self.update_text()
-
-    def on_click_u(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "U"
-            self.update_text()
-
-    def on_click_i(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "I"
-            self.update_text()
-
-    def on_click_o(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "O"
-            self.update_text()
-
-    def on_click_p(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "P"
-            self.update_text()
-
-    def on_click_a(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "A"
-            self.update_text()
-
-    def on_click_s(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "S"
-            self.update_text()
-
-    def on_click_d(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "D"
-            self.update_text()
-
-    def on_click_f(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "F"
-            self.update_text()
-
-    def on_click_g(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "G"
-            self.update_text()
-
-    def on_click_h(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "H"
-            self.update_text()
-
-    def on_click_j(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "J"
-            self.update_text()
-
-    def on_click_k(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "K"
-            self.update_text()
-
-    def on_click_l(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "L"
-            self.update_text()
-
-    def on_click_y(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "Y"
-            self.update_text()
-
-    def on_click_x(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "X"
-            self.update_text()
-
-    def on_click_c(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "C"
-            self.update_text()
-
-    def on_click_v(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "V"
-            self.update_text()
-
-    def on_click_b(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "B"
-            self.update_text()
-
-    def on_click_n(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "N"
-            self.update_text()
-
-    def on_click_m(self, event):
-        if len(self.ui_text_label.text) < max_length_input:
-            self.pressed_key = "M"
-            self.update_text()
-
+            self.press = True
 
     def on_update(self, delta_time: float):
         self.center_x = 0
@@ -610,65 +489,220 @@ class GameOverView(arcade.View):
             self.on_key_press(self, 1)
         if self.center_y != 1.0 and self.center_y != -1.0 and self.center_x != 1.0 and self.center_x != -1.0:
             self.on_key_release(self, 1)
-
+        self.on_keyboard_key()
         self.maus.update()
 
-        if self.maus.collides_with_sprite(self.q) and self.drücken == True:
+
+    def on_keyboard_key(self):
+        if self.maus.collides_with_sprite(self.q_button) and self.press == True:
             if len(self.ui_text_label.text) < max_length_input:
                 self.pressed_key = "Q"
                 self.update_text()
-            self.drücken = False
+
+        if self.maus.collides_with_sprite(self.w_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "W"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.e_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "E"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.r_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "R"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.r_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "R"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.t_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "T"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.z_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "Z"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.u_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "U"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.i_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "I"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.o_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "O"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.p_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "P"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.a_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "A"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.s_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "S"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.d_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "D"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.f_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "F"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.g_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "G"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.h_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "H"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.j_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "J"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.k_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "K"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.l_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "L"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.y_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "Y"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.x_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "X"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.c_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "C"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.v_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "V"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.b_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "B"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.n_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "N"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.m_button) and self.press == True:
+            if len(self.ui_text_label.text) < max_length_input:
+                self.pressed_key = "M"
+                self.update_text()
+
+        if self.maus.collides_with_sprite(self.save_button) and self.press == True:
+            self.save_button_pressed(self)
+
+        if self.maus.collides_with_sprite(self.replay_button) and self.press == True:
+            self.replay_button_pressed(self)
+
+        if self.maus.collides_with_sprite(self.main_button) and self.press == True:
+            self.main_button_pressed(self)
 
     def on_key_press(self, symbol: int, modifiers: int):
 
-            if self.center_y == -1.0:
-                self.maus.change_y = 5
-            if self.center_y == 1.0:
-                self.maus.change_y = -5
-            if self.center_x == -1.0:
-                self.maus.change_x = 5
-            if self.center_x == 1.0:
-                self.maus.change_x = -5
+        if self.center_y == -1.0:
+            self.maus.change_y = 5
+        if self.center_y == 1.0:
+            self.maus.change_y = -5
+        if self.center_x == -1.0:
+            self.maus.change_x = 5
+        if self.center_x == 1.0:
+            self.maus.change_x = -5
 
     def on_key_release(self, _symbol: int, _modifiers: int):
-            self.maus.stop()
-
+        self.maus.stop()
 
     def update_text(self):
         label_text = self.ui_text_label.text
         self.ui_text_label.text = label_text + self.pressed_key
         print("Name: ", self.ui_text_label.text)
+        self.press = False
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.RED)
         self.background = arcade.load_texture("Pictures/GameOverView.jpg")
 
-    def replay_button(self,event):
+    def replay_button_pressed(self, event):
         if main.lastGame == 2:
             game = SnakeViewZweispieler()
         if main.lastGame == 3:
-            game = PongView()
+            game = PongViewEinspieler()
             game.setup()
         if main.lastGame == 1:
             game = SnakeViewEinspieler()
+        if main.lastGame == 4:
+            game = PongViewZweispieler()
+            game.setup()
+
+
+        self.press = False
 
         self.window.show_view(game)
 
     def on_draw(self):
         self.clear()
-        arcade.draw_lrwh_rectangle_textured(0, 0,1536, 864,self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0, 1536, 864, self.background)
+
         self.manager.draw()
-        self.q.draw()
+        self.firstLineList.draw()
+        self.secondLineList.draw()
+        self.thirdLineList.draw()
+        self.main_button.draw()
+        self.save_button.draw()
+        self.replay_button.draw()
+
         self.maus.draw()
-    def hauptmenue_button(self,event):
+
+    def main_button_pressed(self, event):
         game = MenuView()
         self.window.show_view(game)
+        self.press = False
 
-    def save_button(self,event):
+    def save_button_pressed(self, event):
         print("HALLO")
         if main.lastGame == 1:
             f = open("Scores/ScoreSnakeEinspieler.txt", "a")
-        if main.lastGame ==2:
+        if main.lastGame == 2:
             f = open("Scores/ScoreSnakeZweispieler.txt", "a")
         if main.lastGame == 3:
             f = open("Scores/ScorePongEinspieler.txt", "a")
@@ -677,6 +711,7 @@ class GameOverView(arcade.View):
 
         f.write(str(self.ui_text_label.text) + " " + str(main.SCORE) + "\n")
         f.close()
+        self.press = False
 class SnakeViewZweispieler(arcade.View):
     def __init__(self):
         super().__init__()
@@ -696,13 +731,14 @@ class SnakeViewZweispieler(arcade.View):
             self.joystick.push_handlers(self)
             self.joystick2.push_handlers(self)
 
+
         self.score = 0
 
         #SingletonClass.TEST = 1
         self.moved = None
         self.bug = None
 
-        self.snake_image = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
+        self.snake_image = arcade.Sprite("Pictures/SnakeBody.png", image_height=50, image_width=50)
         self.snake_coords = []
         self.snake_move_x = 0
         self.snake_move_y = 20
@@ -722,17 +758,17 @@ class SnakeViewZweispieler(arcade.View):
 
         self.moved2 = None
         self.bug2 = None
-        self.snake_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
+        self.snake_image2 = arcade.Sprite("Pictures/SnakeBody.png", image_height=50, image_width=50)
         self.snake_coords2 = []
         self.snake_move_x2 = 0
         self.snake_move_y2 = 20
 
-        self.head_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
+        self.head_image2 = arcade.Sprite("Pictures/Snake2Head.png", image_height=50, image_width=50)
         self.snake_head2 = None
         self.new_head_position2 = None
         self.direction2 = [0, 1]
 
-        self.food_image2 = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
+        self.food_image2 = arcade.Sprite("Pictures/Snake2Head.png", image_height=50, image_width=50)
         self.food2 = None
         self.food_coords2 = []
 
@@ -1012,7 +1048,7 @@ class SnakeViewEinspieler(arcade.View):
         self.moved = None
         self.bug = None
 
-        self.snake_image = arcade.Sprite("Pictures/SnakeVorschau.png", image_height=50, image_width=50)
+        self.snake_image = arcade.Sprite("Pictures/SnakeBody.png", image_height=50, image_width=50)
         self.snake_coords = []
         self.snake_move_x = 0
         self.snake_move_y = 20
@@ -1159,7 +1195,7 @@ class SnakeViewEinspieler(arcade.View):
             # pass self, the current view, to preserve this view's state
             pause = PauseView(self)
             self.window.show_view(pause)
-class PongView(arcade.View):
+class PongViewEinspieler(arcade.View):
     def __init__(self):
             super().__init__()
             main.lastView = "PongView"
@@ -1182,13 +1218,13 @@ class PongView(arcade.View):
             self.background = arcade.load_texture("Pictures/GameBackground.png")
 
             self.paddles: SpriteList = SpriteList()
-            self.bot: SpriteSolidColor = SpriteSolidColor(10, 100, WHITE)
-            self.right_player: SpriteSolidColor = SpriteSolidColor(10, 100, WHITE)
+            self.bot: SpriteSolidColor = SpriteSolidColor(10, 150, WHITE)
+            self.right_player: SpriteSolidColor = SpriteSolidColor(10, 150, WHITE)
 
             self.paddles.append(self.bot)
             self.paddles.append(self.right_player)
 
-            self.ball: SpriteCircle = SpriteCircle(10, RED)
+            self.ball: SpriteCircle = SpriteCircle(15, RED)
 
     def on_joybutton_release(self, _joystick, button):
         """ Handle button-down event for the joystick """
@@ -1322,6 +1358,226 @@ class PongView(arcade.View):
             self.ball.draw()
             self.bot.draw()
             self.right_player.draw()
+class PongViewZweispieler(arcade.View):
+
+    def __init__(self):
+        super().__init__()
+
+        self.SPEED = 5
+        main.lastView = "PongViewZweispieler"
+
+        joysticks = arcade.get_joysticks()
+
+        if joysticks:
+            # Grab the first one in  the list
+            self.joystick = joysticks[0]
+            self.joystick2 = joysticks[1]
+            self.joystick.open()
+            self.joystick2.open()
+            # Push this object as a handler for joystick events.
+            # Required for the on_joy* events to be called.
+            self.joystick.push_handlers(self)
+            self.joystick2.push_handlers(self)
+
+        self.paddles: SpriteList = SpriteList()
+        self.bot: SpriteSolidColor = SpriteSolidColor(150, 10, WHITE)
+        self.right_player: SpriteSolidColor = SpriteSolidColor(150, 10, WHITE)
+        self.left_player: SpriteSolidColor = SpriteSolidColor(150, 10, WHITE)
+
+        self.background = arcade.load_texture("Pictures/GameBackground.png")
+
+        self.paddles.append(self.left_player)
+        self.paddles.append(self.right_player)
+        self.paddles.append(self.bot)
+
+        self.ball: SpriteCircle = SpriteCircle(15, RED)
+
+    def setup(self):
+        self.ball.position = self.window.width / 2, self.window.height / 2
+        # ball speed
+        self.ball.change_x = random.choice([-2, -3, -4, -5, 2, 3, 4, 5])
+        self.ball.change_y = random.choice([-SPEED, SPEED])
+
+        # setup player and bot paddles
+        self.right_player.position = self.window.width / 2 + 100, self.window.height - 844
+        self.left_player.position = self.window.width / 2 - 100, self.window.height - 844
+        self.bot.position = self.window.width / 2, self.window.height - 10
+
+        self.counter = 0
+
+    def on_joybutton_release(self, _joystick, button):
+        """ Handle button-down event for the joystick """
+        if button == 2 and main.lastView == "PongView":
+            game = PauseView(self)
+            self.window.show_view(game)
+
+        if button == 9 and main.lastView == "PongView":
+            game = PauseView(self)
+            self.window.show_view(game)
+    def on_update(self, delta_time: float):
+        self.ball.update()
+        self.bot.update()
+        self.right_player.update()
+        self.left_player.update()
+
+        self.center_x = 0
+        self.center_y = 0
+
+        if self.joystick:
+            # x-axis
+            self.change_x = self.joystick.x
+            # y-axis
+            self.change_y = -self.joystick.y
+
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        if self.center_x == 1.0:
+            print(self.center_x)
+
+        if self.center_x == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_x == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_y == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_y == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_x != 1.0 and self.center_x != -1.0:
+            self.on_key_release(self, 1)
+
+        self.center_x2 = 0
+        self.center_y2 = 0
+
+        if self.joystick2:
+            # x-axis
+            self.change_x2 = self.joystick2.x
+            # y-axis
+            self.change_y2 = -self.joystick2.y
+
+        self.center_x2 += self.change_x2
+        self.center_y2 += self.change_y2
+
+        if self.center_x2 == 1.0:
+            print(self.center_x2)
+
+        if self.center_x2 == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_x2 == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_y2 == 1.0:
+            self.on_key_press(self, 1)
+        if self.center_y2 == -1.0:
+            self.on_key_press(self, 1)
+        if self.center_x2 != 1.0 and self.center_x2 != -1.0:
+            self.on_key_release2(self, 1)
+
+
+        if self.ball.left <= 0:
+            self.ball.change_x *= -1
+        elif self.ball.right >= self.window.width:
+            self.ball.change_x *= -1
+
+        # moving the bot
+        if self.bot.position[0] != self.ball.position[0]:
+            position_x = self.ball.position[0]
+            position_y = self.bot.position[1]
+            self.bot.set_position(position_x, position_y)
+
+        # limit bot movement
+        if self.bot.right > self.window.width:
+            self.bot.right = self.window.width
+
+        if self.bot.left < 0:
+            self.bot.left = 0
+
+        # ball collide with paddle
+        collided_paddle = self.ball.collides_with_list(self.paddles)
+        if collided_paddle:
+            if collided_paddle[0] is self.left_player or collided_paddle[0] is self.right_player:
+                self.ball.bottom = self.left_player.top
+                self.ball.bottom = self.right_player.top
+                if self.SPEED < 32:
+                    self.SPEED += 2
+                    self.ball.change_y = -self.SPEED
+                    self.ball.change_x = random.choice([-2, -3, -4, -5, 2, 3, 4, 5])
+                    print("Speed:",self.SPEED)
+                    x = print("Richtung:", self.ball.change_x)
+                self.counter += 1
+            else:
+                self.ball.top = self.bot.bottom
+
+            # bounce the ball from the paddle
+            self.ball.change_y *= -1
+
+        # limit movement right_player
+        if self.right_player.right > self.window.width:
+            self.right_player.right = self.window.width
+
+        if self.right_player.left < self.window.width / 2:
+            self.right_player.left = self.window.width / 2
+
+        # limit movement left_player
+        if self.left_player.left < 0:
+            self.left_player.left = 0
+
+        if self.left_player.right > self.window.width / 2:
+            self.left_player.right = self.window.width / 2
+
+        # check if the ball has exited the screen in either side and
+        # end the game
+        self.player = self.left_player, self.right_player
+        if self.ball.bottom <= 0:
+            self.end_game()
+        elif self.ball.top >= self.window.height:
+            self.end_game()
+
+    def on_key_press(self, symbol: int, modifiers: int):
+        print("hier")
+        if symbol == arcade.key.LEFT:
+            self.left_player.change_x = PLAYER_PADDLE_SPEED
+        if symbol == arcade.key.RIGHT:
+            self.left_player.change_x = -PLAYER_PADDLE_SPEED
+        if self.center_x == -1.0:
+            self.left_player.change_x = PLAYER_PADDLE_SPEED
+        if self.center_x == 1.0:
+            self.left_player.change_x = -PLAYER_PADDLE_SPEED
+
+        if symbol == arcade.key.LEFT:
+            self.right_player.change_x = PLAYER_PADDLE_SPEED
+        if symbol == arcade.key.RIGHT:
+            self.right_player.change_x = -PLAYER_PADDLE_SPEED
+        if self.center_x2 == 1.0:
+            self.right_player.change_x = PLAYER_PADDLE_SPEED
+        if self.center_x2 == -1.0:
+            self.right_player.change_x = -PLAYER_PADDLE_SPEED
+
+    def on_key_release(self, _symbol: int, _modifiers: int):
+        self.left_player.stop()
+
+    def on_key_release2(self, _symbol: int, _modifiers: int):
+        self.right_player.stop()
+
+    def end_game(self):
+        main.lastGame = 4
+        main.SCORE = self.counter
+        game = GameOverView()
+        self.window.show_view(game)
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_lrwh_rectangle_textured(0, 0, 1536, 864, self.background)
+
+        draw_text(f'Score: {self.counter}', 40,
+                  self.window.height - 50, WHITE, font_size=30)
+
+        self.half_window_x = self.window.width / 2
+        draw_line(self.half_window_x, 0, self.half_window_x, self.window.height, GRAY, 2)
+
+        self.ball.draw()
+        self.bot.draw()
+        self.right_player.draw()
+        self.left_player.draw()
 class PauseView(arcade.View):
     def __init__(self, game_view):
         super().__init__()

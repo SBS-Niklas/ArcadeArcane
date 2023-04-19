@@ -1,3 +1,6 @@
-Test 1020
-bbbb 1922
-3234 asda
+NIK 20
+JJJJ 16
+XXX 21
+UUUU 5
+KARL 50
+ 12
