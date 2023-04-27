@@ -701,17 +701,62 @@ class GameOverView(arcade.View):
     def save_button_pressed(self, event):
         print("HALLO")
         if main.lastGame == 1:
-            f = open("Scores/ScoreSnakeEinspieler.txt", "a")
+            f = "Scores/ScoreSnakeEinspieler.txt"
+            self.sorter(f)
         if main.lastGame == 2:
-            f = open("Scores/ScoreSnakeZweispieler.txt", "a")
+            f = "Scores/ScoreSnakeZweispieler.txt"
+            self.sorter(f)
         if main.lastGame == 3:
-            f = open("Scores/ScorePongEinspieler.txt", "a")
+            f = "Scores/ScorePongEinspieler.txt"
+            self.sorter(f)
         if main.lastGame == 4:
-            f = open("Scores/ScorePongZweispieler.txt", "a")
+            f = "Scores/ScorePongZweispieler.txt"
+            self.sorter(f)
+
+    def sorter(self,fn):
+        f = open(fn, "a")
 
         f.write(str(self.ui_text_label.text) + " " + str(main.SCORE) + "\n")
-        f.close()
         self.press = False
+        f.close()
+        f = open(fn, "r")
+
+        helper = f.read()
+        f.close()
+        hier = helper.split("\n")
+        wiederString = ''
+        for i in range(0, len(hier)):
+            wiederString = wiederString + hier[i] + " "
+        hier = wiederString.split(" ")
+        hier.pop()
+        buchstabenListe = []
+        zahlenListe = []
+        for i in range(0, len(hier)):
+            if (i % 2 == 0):
+                buchstabenListe.append(hier[i])
+            else:
+                zahlenListe.append(int(hier[i]))
+
+        # Sortiere die Zahlenliste aufsteigend und die Buchstabenliste entsprechend
+        for i in range(len(zahlenListe)):
+            for j in range(len(zahlenListe) - 1):
+                if zahlenListe[j] < zahlenListe[j + 1]:
+                    zahlenListe[j], zahlenListe[j + 1] = zahlenListe[j + 1], zahlenListe[j]
+                    buchstabenListe[j], buchstabenListe[j + 1] = buchstabenListe[j + 1], buchstabenListe[j]
+
+        print(buchstabenListe)
+        print(zahlenListe)
+
+        finalList = []
+        for i in range(0, len(zahlenListe)):
+            finalList.append(buchstabenListe[i] + " " + str(zahlenListe[i]))
+
+        print(finalList)
+        f = open(fn, "r+")
+        for i in range(0, len(finalList)):
+            f.write(finalList[i])
+            f.write("\n")
+        f.close()
 class SnakeViewZweispieler(arcade.View):
     def __init__(self):
         super().__init__()

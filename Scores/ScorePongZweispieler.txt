@@ -1,6 +1,6 @@
-NIK 20
-JJJJ 16
-XXX 21
-UUUU 5
-KARL 50
- 12
+F 3
+V 2
+V 1
+G 1
+X 0
+V 0

@@ -1,3 +1,2 @@
-NICK 3 4
- 4
+NICK 34
 JANN 26
