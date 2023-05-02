@@ -1,0 +1,8 @@
+GGGG 8
+F 3
+V 2
+VVV 1
+VV 1
+VVV 0
+V 0
+VGHU 0
