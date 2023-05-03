@@ -3,3 +3,4 @@ VVVV 7
 NZJA 2
 GGGG 0
 VVVV 0
+G 0
